@@ -13,33 +13,35 @@ const Post = ({ post }) => {
   //TEMPORARY
   const liked = false;
 
+  const { user, datetime, content, postpicture, likes, comments } = post;
+
   return (
     <div className="post">
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={post.profilepicture} alt="" />
+            <img src={user.profilepicture} alt="" />
             <div className="details">
-              <Link to={`/profile/${post.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <span className="name">{post.username}</span>
+              <Link to={`/profile/${user.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <span className="name">{user.username}</span>
               </Link>
-              <span className="date">1 min ago</span>
+              <span className="date">{datetime}</span>
             </div>
           </div>
           <MoreHorizIcon />
         </div>
         <div className="content">
-          <p>{post.post}</p>
-          <img src={post.postpic} alt="" />
+          <p>{content}</p>
+          <img src={postpicture} alt="" />
         </div>
         <div className="info">
           <div className="item">
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
-            12 Likes
+            {likes} Likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
-            12 Comments
+            {comments} Comments
           </div>
         </div>
         {commentOpen && <Comments />}

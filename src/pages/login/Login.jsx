@@ -9,7 +9,6 @@ const Login = () => {
     password: "",
   });
   const [err, setErr] = useState(null);
-
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -19,9 +18,24 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (inputs.email === "" || inputs.password === "") {
+      setErr("No fields can be empty");
+      return;
+    }
+
     try {
-      await login(inputs);
+      const response = await login(inputs);
       navigate("/");
+      if (response.status === 200) {
+        navigate("/");
+      } else {
+        if (response.message) {
+          setErr(response.message);
+        } else {
+          setErr("Unknown error");
+        }
+      }
     } catch (err) {
       setErr(err.response.data);
     }
@@ -45,7 +59,7 @@ const Login = () => {
           <form>
             <input type="text" placeholder="Email" name="email" onChange={handleChange} />
             <input type="password" placeholder="Password" name="password" onChange={handleChange} />
-            {err && err}
+            {err && <p>{err.message || err}</p>}
             <button onClick={handleLogin}>Login</button>
           </form>
         </div>

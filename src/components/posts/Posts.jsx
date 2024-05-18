@@ -1,54 +1,30 @@
 import Post from "../post/Post";
 import "./dist/posts.css";
 import { AuthContext } from "../../context/authContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../pages/services/api";
 
 const Posts = () => {
   //TEMPORARY
-  const posts = [
-    {
-      postid: 1,
-      username: "John Doe",
-      userid: 1,
-      profilepicture: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      post: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-      postpic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-    {
-      postid: 2,
-      username: "Jane Doe",
-      userId: 2,
-      profilepicture: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      post: "Tenetur iste voluptates dolorem rem commodi voluptate pariatur, voluptatum, laboriosam consequatur enim nostrum cumque! Maiores a nam non adipisci minima modi tempore.",
-    },
-  ];
-  // const { currentUser } = useContext(AuthContext);
-  // const [posts, setPosts] = useState([]);
-  // const token = currentUser.token;
+  const { currentUser } = useContext(AuthContext);
 
-  // // Define headers with Authorization Bearer token
-  // const headers = {
-  //   Authorization: `Bearer ${token}`,
-  // };
+  const [posts, setPosts] = useState([]);
 
-  // const [err, setErr] = useState(null);
+  useEffect(() => {
+    const userid = currentUser.userid;
 
-  // const navigate = useNavigate();
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/users/{userid}/allposts".replace("{userid}", userid));
+        setPosts(response.data.posts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
 
-  // const { logout } = useContext(AuthContext);
-
-  // const handleLogout = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await api.post("/getpost", { headers });
-  //     posts = response.data;
-  //     console.log(response.data);
-  //   } catch (err) {
-  //     setErr(err.response.data);
-  //   }
-  // };
+    fetchPosts();
+  }, []); // empty dependency array to ensure it only runs once on mount
 
   return (
     <div className="posts">

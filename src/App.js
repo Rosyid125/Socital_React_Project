@@ -1,37 +1,59 @@
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
-import { createBrowserRouter, RouterProvider, Route, Outlet, Navigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
-import { useContext } from "react";
-import { DarkModeContext } from "./context/darkModeContext";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/authContext";
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
-
-  const { darkMode } = useContext(DarkModeContext);
+  const { me } = useContext(AuthContext);
 
   const Layout = () => {
+    const location = useLocation();
+    const isHomePage = location.pathname === "/";
     return (
-      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+      <div>
         <Navbar />
         <div style={{ display: "flex" }}>
           <LeftBar />
           <div style={{ flex: 6 }}>
             <Outlet />
           </div>
-          <RightBar />
+          {isHomePage && <RightBar />}
         </div>
       </div>
     );
   };
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+    useEffect(() => {
+      const handleMe = async () => {
+        try {
+          const response = await me();
+          if (response.status === 200) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          setIsAuthenticated(false);
+        }
+      };
+
+      handleMe();
+    }, []);
+
+    if (isAuthenticated === null) {
+      return <div>Checking authentication...</div>;
+    }
+
+    if (isAuthenticated === false) {
       return <Navigate to="/login" />;
     }
 

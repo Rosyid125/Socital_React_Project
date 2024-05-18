@@ -6,7 +6,7 @@ import Watch from "../../assets/4.png";
 import Memories from "../../assets/5.png";
 import Events from "../../assets/6.png";
 import Gaming from "../../assets/7.png";
-import Gallery from "../../assets/8.png";
+import Pictures from "../../assets/8.png";
 import Videos from "../../assets/9.png";
 import Messages from "../../assets/10.png";
 import Tutorials from "../../assets/11.png";
@@ -42,12 +42,8 @@ const LeftBar = () => {
       <div className="container">
         <div className="menu">
           <div className="user">
-            <img src={currentUser.auth.profilepicture} alt="" />
-            <span>{currentUser.auth.username}</span>
-          </div>
-          <div className="item">
-            <img src={Friends} alt="" />
-            <span>Friends</span>
+            <img src={currentUser.profilepicture} alt="" />
+            <span>{currentUser.username}</span>
           </div>
         </div>
         <hr />
@@ -56,14 +52,16 @@ const LeftBar = () => {
           <div className="item">
             <img src={Messages} alt="" />
             <span>Messages</span>
+            <span className="comingSoon">Coming soon</span>
           </div>
           <div className="item">
-            <img src={Gallery} alt="" />
-            <span>Gallery</span>
+            <img src={Pictures} alt="" />
+            <span>Pictures</span>
           </div>
           <div className="item">
             <img src={Videos} alt="" />
-            <span>Video</span>
+            <span>Videos</span>
+            <span className="comingSoon">Coming soon</span>
           </div>
         </div>
         <hr />

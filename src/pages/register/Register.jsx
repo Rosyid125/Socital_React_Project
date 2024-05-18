@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./dist/register.css";
-import api from "../services/api";
+import { AuthContext } from "../../context/authContext";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -18,36 +18,25 @@ const Register = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = async (e) => {
+  const { register } = useContext(AuthContext);
+
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (inputs.password !== inputs.confpassword) {
-      setErr("Password dengan Confirm Password tidak cocok");
-      return;
-    }
-
     if (inputs.username === "" || inputs.email === "" || inputs.password === "") {
-      setErr("Jangan biarkan field kosong");
+      setErr("No fields can be empty");
       return;
     }
 
     try {
-      const response = await api.post("/register", inputs);
-      if (response.status === 201) {
+      const response = await register(inputs);
+      if (response.status === 200) {
         navigate("/login");
+      } else {
+        setErr(response.message);
       }
     } catch (err) {
-      const errorData = JSON.stringify(err.response.status);
-      if (errorData === "409") {
-        const errorMessage = "Email telah digunakan";
-        setErr(errorMessage);
-      } else if (errorData === "500") {
-        const errorMessage = "Gagal menyimpan data, masalah query pada backend";
-        setErr(errorMessage);
-      } else if (errorData === "422") {
-        const errorMessage = 'Anda melupakan "@" pada email anda';
-        setErr(errorMessage);
-      }
+      setErr(err.response.data);
     }
   };
 
@@ -71,8 +60,8 @@ const Register = () => {
             <input type="email" placeholder="Email" name="email" onChange={handleChange} />
             <input type="password" placeholder="Password" name="password" onChange={handleChange} />
             <input type="password" placeholder="Confirm Password" name="confpassword" onChange={handleChange} />
-            {<p>{err}</p>}
-            <button onClick={handleClick}>Register</button>
+            {err && <p>{err.message || err}</p>}
+            <button onClick={handleRegister}>Register</button>
           </form>
         </div>
       </div>
