@@ -1,41 +1,70 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./dist/comments.css";
 import { AuthContext } from "../../context/authContext";
+import api from "../../pages/services/api";
 
-const Comments = () => {
+const Comments = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
-  //Temporary
-  const comments = [
-    {
-      id: 1,
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-      name: "John Doe",
-      userId: 1,
-      profilePicture: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    },
-    {
-      id: 2,
-      desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nequeaspernatur ullam aperiam",
-      name: "Jane Doe",
-      userId: 2,
-      profilePicture: "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    },
-  ];
+
+  const [comments, setComments] = useState([]);
+
+  const [inputs, setInputs] = useState({
+    comment: "",
+  });
+
+  const [err, setErr] = useState(null);
+
+  const { postid } = post;
+
+  useEffect(() => {
+    const fetchPosts = async (postid) => {
+      try {
+        const response = await api.get(`/posts/${postid}/comments`);
+        setComments(response.data.comments);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchPosts(postid);
+  }, [post]);
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleComment = async (postid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+
+      const response = await api.post(`/posts/${postid}/comments/add`, inputs, { headers });
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+
   return (
     <div className="comments">
       <div className="write">
         <img src={currentUser.profilepicture} alt="" />
-        <input type="text" placeholder="write a comment" />
-        <button>Send</button>
+        <input type="text" placeholder="write a comment" onChange={handleChange} name="comment" />
+        <button onClick={() => handleComment(postid)}>Send</button>
       </div>
       {comments.map((comment) => (
-        <div className="comment">
-          <img src={comment.profilePicture} alt="" />
+        <div className="comment" key={comment.commentid}>
+          <img src={comment.user.profilePicture} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
-            <p>{comment.desc}</p>
+            <span>{comment.user.username}</span>
+            <p>{comment.comment}</p>
           </div>
-          <span className="date">1 hour ago</span>
+          <span className="date">{comment.datetime}</span>
         </div>
       ))}
     </div>

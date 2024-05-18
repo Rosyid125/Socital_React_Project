@@ -64,16 +64,19 @@
   align-items: center;
   gap: 10px;
 }
-.rightBar .container .item .user .buttons button {
+.rightBar .container .item .user .followButton button {
   border: none;
   padding: 5px;
   color: white;
   cursor: pointer;
   border-radius: 3px;
-}
-.rightBar .container .item .user .buttons button:first-child {
   background-color: #ffbb00;
 }
-.rightBar .container .item .user .buttons button:last-child {
+.rightBar .container .item .user .unFollowButton button {
+  border: none;
+  padding: 5px;
+  color: white;
+  cursor: pointer;
+  border-radius: 3px;
   background-color: #f0544f;
 }

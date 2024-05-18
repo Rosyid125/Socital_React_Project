@@ -55,3 +55,21 @@
   cursor: pointer;
   font-size: 14px;
 }
+
+.post .container .user .menu {
+  display: flex;
+  gap: 10px;
+}
+.post .container .user .menu button {
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.post .container .user .menu button:first-child {
+  background-color: #0095ff;
+}
+.post .container .user .menu button:last-child {
+  background-color: #f0544f;
+}

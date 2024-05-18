@@ -5,15 +5,104 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../../context/authContext";
+import api from "../../pages/services/api";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [err, setErr] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const [likeId, setLikeId] = useState(null);
+
+  const { currentUser } = useContext(AuthContext);
 
   //TEMPORARY
-  const liked = false;
 
-  const { user, datetime, content, postpicture, likes, comments } = post;
+  const { user, datetime, content, postpicture, likes, comments, postid } = post;
+
+  const handleEdit = () => {
+    // Logika untuk mengedit pos
+    console.log("Edit post");
+  };
+
+  const handleDelete = async (postid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      console.log(headers);
+      const response = await api.delete(`/posts/${postid}/delete`, { headers }); // ternyata kalau delete itu di pass ke second parmeter
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (err) {
+      console.error(err.response.data);
+    }
+  };
+
+  useEffect(() => {
+    const checkLiked = async (postid) => {
+      try {
+        const userid = currentUser.userid;
+
+        const headers = {
+          Authorization: `Bearer ${currentUser.token}`,
+        };
+
+        const response = await api.get(`/posts/${postid}/likes/${userid}`, { headers });
+        if (response.data.liked === true) {
+          setLiked(true);
+          setLikeId(response.data.likeid);
+        } else {
+          setLiked(false);
+        }
+      } catch (error) {
+        console.error("Error checking if post is liked:", error);
+      }
+    };
+    checkLiked(postid);
+  }, [currentUser.token, postid]);
+
+  const handleLike = async (postid) => {
+    try {
+      // Send a POST request to like the post
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+
+      const response = await api.post(`/posts/${postid}/likes/like`, {}, { headers });
+      if (response.status === 200) {
+        setLiked(true);
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleUnlike = async (postid, likeid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      // Send a DELETE request to unlike the post
+      const response = await api.delete(`/posts/${postid}/likes/${likeid}`, { headers });
+      if (response.status === 200) {
+        setLiked(false);
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (error) {
+      console.error("Error unliking post:", error);
+    }
+  };
 
   return (
     <div className="post">
@@ -28,14 +117,19 @@ const Post = ({ post }) => {
               <span className="date">{datetime}</span>
             </div>
           </div>
-          <MoreHorizIcon />
+          {currentUser && currentUser.userid === user.userid && (
+            <div className="menu">
+              <button>Edit</button>
+              <button onClick={() => handleDelete(postid)}>Delete</button>
+            </div>
+          )}
         </div>
         <div className="content">
           <p>{content}</p>
           <img src={postpicture} alt="" />
         </div>
         <div className="info">
-          <div className="item">
+          <div className="item" onClick={() => (liked ? handleUnlike(postid, likeId) : handleLike(postid))}>
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
             {likes} Likes
           </div>
@@ -44,7 +138,7 @@ const Post = ({ post }) => {
             {comments} Comments
           </div>
         </div>
-        {commentOpen && <Comments />}
+        {commentOpen && <Comments post={post} />}
       </div>
     </div>
   );
