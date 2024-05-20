@@ -1,0 +1,18 @@
+.likes img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.likes .like {
+  margin: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.likes .like .info {
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}

@@ -8,10 +8,11 @@ import Comments from "../comments/Comments";
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
+import Likes from "../likes/Likes";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [likeOpen, setLikeOpen] = useState(false);
   const [err, setErr] = useState(null);
   const [liked, setLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
@@ -104,6 +105,20 @@ const Post = ({ post }) => {
     }
   };
 
+  const handleLikeClick = () => {
+    setLikeOpen(!likeOpen);
+    if (commentOpen) {
+      setCommentOpen(false);
+    }
+  };
+
+  const handleCommentClick = () => {
+    setCommentOpen(!commentOpen);
+    if (likeOpen) {
+      setLikeOpen(false);
+    }
+  };
+
   return (
     <div className="post">
       <div className="container">
@@ -131,13 +146,16 @@ const Post = ({ post }) => {
         <div className="info">
           <div className="item" onClick={() => (liked ? handleUnlike(postid, likeId) : handleLike(postid))}>
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
+          </div>
+          <div className="item" onClick={handleLikeClick}>
             {likes} Likes
           </div>
-          <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
+          <div className="item" onClick={handleCommentClick}>
             <TextsmsOutlinedIcon />
             {comments} Comments
           </div>
         </div>
+        {likeOpen && <Likes post={post} />}
         {commentOpen && <Comments post={post} />}
       </div>
     </div>
