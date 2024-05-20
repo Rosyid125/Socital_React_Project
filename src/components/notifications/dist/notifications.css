@@ -1,0 +1,51 @@
+.notifications-container {
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  z-index: 1000;
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notifications-header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.notifications-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.notifications-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notifications-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notifications-list li:last-child {
+  border-bottom: none;
+}
+
+.notifications-list li button {
+  border: none;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.notifications-list li button:hover {
+  text-decoration: underline;
+}
