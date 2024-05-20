@@ -1,15 +1,14 @@
 import "./dist/rightBar.css";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const RightBar = () => {
   const [following, setFollowing] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [err, setErr] = useState(null);
-  const [followid, setFollowId] = useState([]);
+  const [followStatus, setFollowStatus] = useState({});
 
   const { currentUser } = useContext(AuthContext);
 
@@ -18,26 +17,37 @@ const RightBar = () => {
 
     const fetchFollows = async () => {
       try {
-        const responseFollowings = await api.get("/follows/{userid}/followings".replace("{userid}", userid));
-        const responseFollowers = await api.get("/follows/{userid}/followers".replace("{userid}", userid));
+        const responseFollowings = await api.get(`/follows/${userid}/followings`);
+        const responseFollowers = await api.get(`/follows/${userid}/followers`);
         setFollowing(responseFollowings.data.following);
         setFollowers(responseFollowers.data.followers);
-        setFollowId(responseFollowings.data.followid);
+
+        // Check follow status for each user in following and followers
+        const followStatuses = {};
+        const allUsers = [...responseFollowings.data.following, ...responseFollowers.data.followers];
+
+        for (const user of allUsers) {
+          const userIdToCheck = user.followed ? user.followed.userid : user.following.userid;
+          const response = await api.get(`/follows/${userIdToCheck}/following/${userid}`);
+          followStatuses[userIdToCheck] = response.data.followed;
+        }
+
+        setFollowStatus(followStatuses);
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching Follows:", error);
+        setErr(error.message);
       }
     };
 
     fetchFollows();
-  }, []);
+  }, [currentUser]);
 
   const handleFollow = async (userid) => {
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      console.log(headers);
-      const response = await api.post("/follows/{userid}".replace("{userid}", userid), {}, { headers });
+      const response = await api.post(`/follows/${userid}`, {}, { headers });
       if (response.status === 200) {
         window.location.reload();
       } else {
@@ -45,16 +55,16 @@ const RightBar = () => {
       }
     } catch (err) {
       console.error(err.response.data);
+      setErr(err.response.data.message);
     }
   };
 
-  const handleUnfollow = async (followid) => {
+  const handleUnfollow = async (userid) => {
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      console.log(headers);
-      const response = await api.delete("/follows/{followid}".replace("{followid}", followid), { headers }); // ternyata kalau delete itu di pass ke second parmeter
+      const response = await api.delete(`/follows/${userid}`, { headers });
       if (response.status === 200) {
         window.location.reload();
       } else {
@@ -62,43 +72,37 @@ const RightBar = () => {
       }
     } catch (err) {
       console.error(err.response.data);
+      setErr(err.response.data.message);
     }
   };
-
-  const combinedData = following.map((user, index) => ({
-    ...user,
-    followid: followid[index].followid,
-  }));
-
-  console.log(combinedData);
 
   return (
     <div className="rightBar">
       <div className="container">
         <div className="item">
-          <span>Followings</span>
-          {combinedData.map((user) => (
-            <div className="user" key={user.userid}>
+          <span>Following</span>
+          {following.map((follow) => (
+            <div className="user" key={follow.followed.userid}>
               <div className="userInfo">
-                <img src={user.profilepicture} alt={user.username} />
-                <span>{user.username}</span>
+                <img src={follow.followed.profilepicture} alt={follow.followed.username} />
+                <span>{follow.followed.username}</span>
               </div>
               <div className="unFollowButton">
-                <button onClick={() => handleUnfollow(user.followid)}>unfollow</button>
+                <button onClick={() => (followStatus[follow.followed.userid] ? handleUnfollow(follow.followid) : handleFollow(follow.followed.userid))}>{followStatus[follow.followed.userid] ? "Unfollow" : "Follow"}</button>
               </div>
             </div>
           ))}
         </div>
         <div className="item">
           <span>Followers</span>
-          {followers.map((user) => (
-            <div className="user" key={user.userid}>
+          {followers.map((follower) => (
+            <div className="user" key={follower.following.userid}>
               <div className="userInfo">
-                <img src={user.profilepicture} alt={user.username} />
-                <span>{user.username}</span>
+                <img src={follower.following.profilepicture} alt={follower.following.username} />
+                <span>{follower.following.username}</span>
               </div>
               <div className="followButton">
-                <button onClick={() => handleFollow(user.userid)}>follow</button>
+                <button onClick={() => (followStatus[follower.following.userid] ? handleUnfollow(follower.followid) : handleFollow(follower.following.userid))}>{followStatus[follower.following.userid] ? "Unfollow" : "Follow"}</button>
               </div>
             </div>
           ))}

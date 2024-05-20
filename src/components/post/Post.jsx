@@ -23,6 +23,25 @@ const Post = ({ post }) => {
 
   const { user, datetime, content, postpicture, likes, comments, postid } = post;
 
+  useEffect(() => {
+    const checkLiked = async (postid) => {
+      try {
+        const userid = currentUser.userid;
+
+        const response = await api.get(`/posts/${postid}/likes/${userid}`);
+        if (response.data.liked === true) {
+          setLiked(true);
+          setLikeId(response.data.likeid);
+        } else {
+          setLiked(false);
+        }
+      } catch (error) {
+        console.error("Error checking if post is liked:", error);
+      }
+    };
+    checkLiked(postid);
+  }, []);
+
   const handleEdit = () => {
     // Logika untuk mengedit pos
     console.log("Edit post");
@@ -44,29 +63,6 @@ const Post = ({ post }) => {
       console.error(err.response.data);
     }
   };
-
-  useEffect(() => {
-    const checkLiked = async (postid) => {
-      try {
-        const userid = currentUser.userid;
-
-        const headers = {
-          Authorization: `Bearer ${currentUser.token}`,
-        };
-
-        const response = await api.get(`/posts/${postid}/likes/${userid}`, { headers });
-        if (response.data.liked === true) {
-          setLiked(true);
-          setLikeId(response.data.likeid);
-        } else {
-          setLiked(false);
-        }
-      } catch (error) {
-        console.error("Error checking if post is liked:", error);
-      }
-    };
-    checkLiked(postid);
-  }, [currentUser.token, postid]);
 
   const handleLike = async (postid) => {
     try {

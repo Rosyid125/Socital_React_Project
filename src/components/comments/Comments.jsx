@@ -50,6 +50,22 @@ const Comments = ({ post }) => {
     }
   };
 
+  const handleDeleteComment = async (postid, commentid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      const response = await api.delete(`/posts/${postid}/comments/${commentid}`, { headers });
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+
   return (
     <div className="comments">
       <div className="write">
@@ -65,6 +81,7 @@ const Comments = ({ post }) => {
             <p>{comment.comment}</p>
           </div>
           <span className="date">{comment.datetime}</span>
+          {currentUser.userid === comment.user.userid && <button onClick={() => handleDeleteComment(postid, comment.commentid)}>Delete</button>}
         </div>
       ))}
     </div>
