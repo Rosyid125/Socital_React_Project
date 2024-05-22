@@ -1,7 +1,6 @@
 import "./dist/share.css";
 import Image from "../../assets/8.png";
-import Video from "../../assets/9.png";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
 
@@ -55,8 +54,7 @@ const Share = () => {
             <label htmlFor="file">
               <div className="item">
                 <img src={Image} alt="" />
-                <img src={Video} alt="" />
-                <span>Add Media</span>
+                <span>Add Picture</span>
               </div>
             </label>
           </div>

@@ -8,6 +8,7 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/authContext";
+import "./dist/app.css";
 
 function App() {
   const { me } = useContext(AuthContext);
@@ -50,7 +51,7 @@ function App() {
     }, []);
 
     if (isAuthenticated === null) {
-      return <div>Checking authentication...</div>;
+      return <div className="authLoading">Socital</div>;
     }
 
     if (isAuthenticated === false) {
@@ -74,7 +75,7 @@ function App() {
           element: <Home />,
         },
         {
-          path: "/profile/:id",
+          path: "/profile/:userid",
           element: <Profile />,
         },
       ],

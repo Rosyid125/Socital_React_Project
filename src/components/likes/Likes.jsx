@@ -27,7 +27,9 @@ const Likes = ({ post }) => {
 
   return (
     <div className="likes">
-      <p>Likedby</p>
+      <div className="likesHeader">
+        <h3>Likes</h3>
+      </div>
       {likes.map((likedby) => (
         <div className="like" key={likedby.user.userid}>
           <img src={likedby.user.profilePicture} alt="" />

@@ -1,0 +1,16 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: #ffdf85;
+  min-height: 100%;
+}
+.authLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  font-size: 1.5rem;
+  color: #ffbb00;
+  background-color: white;
+}

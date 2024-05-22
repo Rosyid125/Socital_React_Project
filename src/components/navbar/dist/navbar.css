@@ -73,14 +73,6 @@
   border-radius: 50%;
   object-fit: cover;
 }
-.navbar .right .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.navbar .right .container .comingSoon {
-  font-size: 10px;
-  color: red;
-  margin-top: auto;
+.navbar .right .notificationIcon {
+  cursor: pointer;
 }

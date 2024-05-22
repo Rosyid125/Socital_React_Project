@@ -59,12 +59,12 @@ const RightBar = () => {
     }
   };
 
-  const handleUnfollow = async (userid) => {
+  const handleUnfollow = async (followid) => {
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      const response = await api.delete(`/follows/${userid}`, { headers });
+      const response = await api.delete(`/follows/${followid}`, { headers });
       if (response.status === 200) {
         window.location.reload();
       } else {

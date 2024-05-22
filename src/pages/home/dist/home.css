@@ -1,6 +1,6 @@
 .home {
   padding: 20px 70px;
-  background-color: #ffdf85;
+  /* background-color: #ffdf85; */
 }
 @media (max-width: 480px) {
   .home {

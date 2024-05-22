@@ -50,18 +50,8 @@ const LeftBar = () => {
         <div className="menu">
           <span>Your shortcuts</span>
           <div className="item">
-            <img src={Messages} alt="" />
-            <span>Messages</span>
-            <span className="comingSoon">Coming soon</span>
-          </div>
-          <div className="item">
             <img src={Pictures} alt="" />
             <span>Pictures</span>
-          </div>
-          <div className="item">
-            <img src={Videos} alt="" />
-            <span>Videos</span>
-            <span className="comingSoon">Coming soon</span>
           </div>
         </div>
         <hr />

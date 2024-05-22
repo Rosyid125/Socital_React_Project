@@ -1,43 +1,97 @@
 import "./dist/profile.css";
-
-import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import PinterestIcon from "@mui/icons-material/Pinterest";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import PlaceIcon from "@mui/icons-material/Place";
-import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
+import api from "../../pages/services/api";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/authContext";
 
 const Profile = () => {
+  const { userid } = useParams();
+  const [userInfo, setUserInfo] = useState([]);
+  const [err, setErr] = useState(null);
+  const [followStatus, setFollowStatus] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+  const [followId, setFollowId] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get(`/users/${userid}`);
+        setUserInfo(response.data.user[0]);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [userid]);
+
+  useEffect(() => {
+    const fetchFollowStatusandFollowId = async () => {
+      try {
+        const response = await api.get(`/follows/${userid}/following/${currentUser.userid}`);
+
+        setFollowStatus(response.data);
+      } catch (error) {
+        console.error("Error fetching Follows:", error);
+        setErr(error.message);
+      }
+    };
+
+    fetchFollowStatusandFollowId();
+  }, [userid]);
+
+  const handleFollow = async (userid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      const response = await api.post(`/follows/${userid}`, {}, { headers });
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (err) {
+      console.error(err.response.data);
+      setErr(err.response.data.message);
+    }
+  };
+
+  const handleUnfollow = async (followid) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      const response = await api.delete(`/follows/${followid}`, { headers });
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (err) {
+      console.error(err.response.data);
+      setErr(err.response.data.message);
+    }
+  };
+
   return (
     <div className="profile">
       <div className="images">
-        <img src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="" className="profilePic" />
+        <img src={userInfo.profilepicture} alt={userInfo.username} className="profilePic" />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
-          <div className="left">
-            <div className="bio">
-              <span>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia perspiciatis maiores aspernatur? Aliquam dolorem laudantium accusamus doloremque provident quidem officia, aspernatur dolorum eius pariatur soluta nihil quas eum,
-                omnis vero!
-              </span>
-            </div>
-          </div>
           <div className="center">
-            <span>Jane Doe</span>
+            <span>{userInfo.username}</span>
             <div className="buttons">
-              <button>follow</button>
-              <button>unfollow</button>
+              <button onClick={() => (followStatus.followed ? handleUnfollow(followStatus.followid) : handleFollow(userInfo.userid))}>{followStatus.followed ? "Unfollow" : "Follow"}</button>
             </div>
           </div>
-          <div className="right">
-            <div className="container">
-              <EmailOutlinedIcon />
-              <span className="comingSoon">Coming soon</span>
+          <div className="bottom">
+            <div className="bio">
+              <span>{userInfo.bio ? userInfo.bio : <span className="noBio">No bio</span>}</span>
             </div>
           </div>
         </div>

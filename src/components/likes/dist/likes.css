@@ -1,3 +1,24 @@
+.likes {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.likes::-webkit-scrollbar {
+  display: none;
+}
+
+.likes .likesHeader {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin: 20px 0px;
+}
+
+.likes .likesHeader h3 {
+  font-size: 16px;
+  color: #333;
+}
 .likes img {
   width: 40px;
   height: 40px;

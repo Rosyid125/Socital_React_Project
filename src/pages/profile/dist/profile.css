@@ -1,5 +1,5 @@
 .profile {
-  background-color: #ffdf85;
+  /* background-color: #ffdf85; */
 }
 .profile .images {
   width: 100%;
@@ -31,6 +31,7 @@
   }
 }
 .profile .profileContainer .uInfo {
+  flex-direction: column;
   height: 180px;
   -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -50,16 +51,6 @@
     height: 30vh;
     padding: 20px;
     margin-top: 100px;
-  }
-}
-.profile .profileContainer .uInfo .left {
-  flex: 1;
-  display: flex;
-  gap: 10px;
-}
-@media (max-width: 960px) {
-  .profile .profileContainer .uInfo .left .bio {
-    flex-wrap: wrap;
   }
 }
 .profile .profileContainer .uInfo .center {
@@ -91,20 +82,14 @@
 .profile .profileContainer .uInfo .center .buttons button:last-child {
   background-color: #f0544f;
 }
-
-.profile .profileContainer .uInfo .right {
+.profile .profileContainer .uInfo .bottom {
+  padding-top: 10px;
   flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
   gap: 10px;
 }
-.profile .profileContainer .uInfo .right .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.profile .profileContainer .uInfo .right .container .comingSoon {
-  font-size: 10px;
-  color: red;
+@media (max-width: 960px) {
+  .profile .profileContainer .uInfo .bottom .bio {
+    flex-wrap: wrap;
+  }
 }
