@@ -127,6 +127,20 @@
   overflow-y: auto; /* Menambahkan scrolling jika konten melebihi ukuran popup */
 }
 
+.popup-inner .header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.popup-inner .header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
 .popup-inner ul {
   list-style: none;
   padding: 0;

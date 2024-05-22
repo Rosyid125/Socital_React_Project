@@ -108,6 +108,9 @@ const Profile = () => {
   const renderPopupFollowings = (data) => (
     <div className="popup">
       <div className="popup-inner">
+        <div className="header">
+          <h3>Followings</h3>
+        </div>
         <ul>
           {data.map((user) => (
             <div className="follow" key={user.followid}>
@@ -126,6 +129,9 @@ const Profile = () => {
   const renderPopupFollowers = (data) => (
     <div className="popup">
       <div className="popup-inner">
+        <div className="header">
+          <h3>Followers</h3>
+        </div>
         <ul>
           {data.map((user) => (
             <div className="follow" key={user.followid}>

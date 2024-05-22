@@ -9,6 +9,7 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
 import Likes from "../likes/Likes";
+import Image from "../../assets/8.png";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
@@ -17,11 +18,20 @@ const Post = ({ post }) => {
   const [liked, setLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
 
+  const [editOpen, setEditOpen] = useState(false);
+
   const { currentUser } = useContext(AuthContext);
 
-  //TEMPORARY
-
   const { user, datetime, content, postpicture, likes, comments, postid } = post;
+
+  const [inputs, setInputs] = useState({
+    content: "",
+    postpicture: "",
+  });
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     const checkLiked = async (postid) => {
@@ -42,9 +52,22 @@ const Post = ({ post }) => {
     checkLiked(postid);
   }, []);
 
-  const handleEdit = () => {
-    // Logika untuk mengedit pos
-    console.log("Edit post");
+  const handleEdit = async (postid) => {
+    // e.preventDefault();
+    try {
+      const headers = {
+        Authorization: `Bearer ${currentUser.token}`,
+      };
+      const response = api.patch(`/posts/${postid}/edit`, inputs, { headers });
+
+      if (response.status === 200) {
+        // window.location.reload();
+      } else {
+        setErr(response.message);
+      }
+    } catch (err) {
+      console.error(err.response.data);
+    }
   };
 
   const handleDelete = async (postid) => {
@@ -52,7 +75,6 @@ const Post = ({ post }) => {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      console.log(headers);
       const response = await api.delete(`/posts/${postid}/delete`, { headers }); // ternyata kalau delete itu di pass ke second parmeter
       if (response.status === 200) {
         window.location.reload();
@@ -115,6 +137,36 @@ const Post = ({ post }) => {
     }
   };
 
+  const openEditPopup = () => {
+    setEditOpen(true);
+  };
+
+  const closeEditPopup = () => {
+    setEditOpen(false);
+  };
+
+  const renderPopupEdit = (postid) => (
+    <div className="edit-popup">
+      <div className="edit-popup-inner">
+        <h2>Edit Post</h2>
+        <input type="text" placeholder="Edit text content" onChange={handleChange} name="content" />
+        <input type="file" id="file" className="file-input" />
+        <label htmlFor="file" className="file-label">
+          <div className="item file-container">
+            <img src={Image} alt="" />
+            <span>Edit Picture</span>
+          </div>
+        </label>
+        <button type="submit" onClick={() => handleEdit(postid)}>
+          Save Changes
+        </button>
+        <button type="button" onClick={closeEditPopup}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="post">
       <div className="container">
@@ -130,7 +182,7 @@ const Post = ({ post }) => {
           </div>
           {currentUser && currentUser.userid === user.userid && (
             <div className="menu">
-              <button>Edit</button>
+              <button onClick={openEditPopup}>Edit</button>
               <button onClick={() => handleDelete(postid)}>Delete</button>
             </div>
           )}
@@ -153,6 +205,7 @@ const Post = ({ post }) => {
         </div>
         {likeOpen && <Likes post={post} />}
         {commentOpen && <Comments post={post} />}
+        {editOpen && renderPopupEdit(postid)}
       </div>
     </div>
   );
