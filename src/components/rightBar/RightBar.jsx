@@ -81,14 +81,19 @@ const RightBar = () => {
       <div className="container">
         <div className="item">
           <span>Following</span>
-          {following.map((follow) => (
-            <div className="user" key={follow.followed.userid}>
+          {following.map((following) => (
+            <div className="user" key={following.followed.userid}>
               <div className="userInfo">
-                <img src={follow.followed.profilepicture} alt={follow.followed.username} />
-                <span>{follow.followed.username}</span>
+                <img src={following.followed.profilepicture} alt={following.followed.username} />
+                <span>{following.followed.username}</span>
               </div>
-              <div className="unFollowButton">
-                <button onClick={() => (followStatus[follow.followed.userid] ? handleUnfollow(follow.followid) : handleFollow(follow.followed.userid))}>{followStatus[follow.followed.userid] ? "Unfollow" : "Follow"}</button>
+              <div className="followUnfollowButton">
+                <button
+                  className={followStatus[following.followed.userid] ? "unfollowButton" : "followButton"}
+                  onClick={() => (followStatus[following.followed.userid] ? handleUnfollow(following.followid) : handleFollow(following.followed.userid))}
+                >
+                  {followStatus[following.followed.userid] ? "Unfollow" : "Follow"}
+                </button>
               </div>
             </div>
           ))}
@@ -101,8 +106,13 @@ const RightBar = () => {
                 <img src={follower.following.profilepicture} alt={follower.following.username} />
                 <span>{follower.following.username}</span>
               </div>
-              <div className="followButton">
-                <button onClick={() => (followStatus[follower.following.userid] ? handleUnfollow(follower.followid) : handleFollow(follower.following.userid))}>{followStatus[follower.following.userid] ? "Unfollow" : "Follow"}</button>
+              <div className="followUnfollowButton">
+                <button
+                  className={followStatus[follower.following.userid] ? "unfollowButton" : "followButton"}
+                  onClick={() => (followStatus[follower.following.userid] ? handleUnfollow(follower.followid) : handleFollow(follower.following.userid))}
+                >
+                  {followStatus[follower.following.userid] ? "Unfollow" : "Follow"}
+                </button>
               </div>
             </div>
           ))}

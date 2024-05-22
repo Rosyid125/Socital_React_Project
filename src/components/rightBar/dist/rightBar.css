@@ -64,19 +64,16 @@
   align-items: center;
   gap: 10px;
 }
-.rightBar .container .item .user .followButton button {
+.rightBar .container .item .user .followUnfollowButton button {
   border: none;
   padding: 5px;
   color: white;
   cursor: pointer;
   border-radius: 3px;
+}
+.rightBar .container .item .user .followUnfollowButton .followButton {
   background-color: #ffbb00;
 }
-.rightBar .container .item .user .unFollowButton button {
-  border: none;
-  padding: 5px;
-  color: white;
-  cursor: pointer;
-  border-radius: 3px;
+.rightBar .container .item .user .followUnfollowButton .unfollowButton {
   background-color: #f0544f;
 }

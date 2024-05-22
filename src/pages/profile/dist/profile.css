@@ -32,7 +32,6 @@
 }
 .profile .profileContainer .uInfo {
   flex-direction: column;
-  height: 180px;
   -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -64,6 +63,10 @@
   font-size: 30px;
   font-weight: 500;
 }
+.profile .profileContainer .uInfo .center .email {
+  font-size: 15px;
+  color: grey;
+}
 .profile .profileContainer .uInfo .center .buttons {
   display: flex;
   align-items: center;
@@ -76,20 +79,89 @@
   border-radius: 5px;
   cursor: pointer;
 }
-.profile .profileContainer .uInfo .center .buttons button:first-child {
+.profile .profileContainer .uInfo .center .buttons .followButton {
   background-color: #ffbb00;
 }
-.profile .profileContainer .uInfo .center .buttons button:last-child {
+.profile .profileContainer .uInfo .center .buttons .unfollowButton {
   background-color: #f0544f;
+}
+.profile .profileContainer .uInfo .center .followingsFollowers span {
+  font-size: 15px;
+  margin-right: 30px; /* Menambahkan jarak ke kanan */
+}
+
+/* Menghilangkan margin pada elemen terakhir */
+.profile .profileContainer .uInfo .center .followingsFollowers span:last-child {
+  margin-right: 0;
 }
 .profile .profileContainer .uInfo .bottom {
   padding-top: 10px;
-  flex: 1;
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 @media (max-width: 960px) {
   .profile .profileContainer .uInfo .bottom .bio {
     flex-wrap: wrap;
   }
+}
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Menambahkan latar belakang gelap semi-transparan */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-inner {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 80%;
+  max-height: 80%;
+  overflow-y: auto; /* Menambahkan scrolling jika konten melebihi ukuran popup */
+}
+
+.popup-inner ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popup-inner .follow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #ccc; /* Menambahkan garis bawah antara setiap item */
+}
+
+.popup-inner .follow img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.popup-inner .info {
+  flex: 1;
+}
+
+.popup-inner .info span {
+  font-size: 16px;
+}
+
+.popup-inner button {
+  border: none;
+  background-color: #f0544f; /* Warna tombol close */
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }

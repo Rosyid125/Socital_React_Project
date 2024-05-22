@@ -14,6 +14,11 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
   const [followId, setFollowId] = useState(null);
 
+  const [following, setFollowing] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [showFollowingsPopup, setShowFollowingsPopup] = useState(false);
+  const [showFollowersPopup, setShowFollowersPopup] = useState(false);
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -40,6 +45,22 @@ const Profile = () => {
     };
 
     fetchFollowStatusandFollowId();
+  }, [userid]);
+
+  useEffect(() => {
+    const fetchFollows = async () => {
+      try {
+        const responseFollowings = await api.get(`/follows/${userid}/followings`);
+        const responseFollowers = await api.get(`/follows/${userid}/followers`);
+        setFollowing(responseFollowings.data.following);
+        setFollowers(responseFollowers.data.followers);
+      } catch (error) {
+        console.error("Error fetching Follows:", error);
+        setErr(error.message);
+      }
+    };
+
+    fetchFollows();
   }, [userid]);
 
   const handleFollow = async (userid) => {
@@ -76,6 +97,53 @@ const Profile = () => {
     }
   };
 
+  const toggleFollowingsPopup = () => {
+    setShowFollowingsPopup(!showFollowingsPopup);
+  };
+
+  const toggleFollowersPopup = () => {
+    setShowFollowersPopup(!showFollowersPopup);
+  };
+
+  const renderPopupFollowings = (data) => (
+    <div className="popup">
+      <div className="popup-inner">
+        <ul>
+          {data.map((user) => (
+            <div className="follow" key={user.followid}>
+              <img src={user.followed.profilepicture} alt="" />
+              <div className="info">
+                <span>{user.followed.username}</span>
+              </div>
+            </div>
+          ))}
+        </ul>
+        <button onClick={() => setShowFollowingsPopup(false)}>Close</button>
+      </div>
+    </div>
+  );
+
+  const renderPopupFollowers = (data) => (
+    <div className="popup">
+      <div className="popup-inner">
+        <ul>
+          {data.map((user) => (
+            <div className="follow" key={user.followid}>
+              <img src={user.following.profilepicture} alt="" />
+              <div className="info">
+                <span>{user.following.username}</span>
+              </div>
+            </div>
+          ))}
+        </ul>
+        <button onClick={() => setShowFollowersPopup(false)}>Close</button>
+      </div>
+    </div>
+  );
+
+  console.log(currentUser.userid);
+  console.log(userInfo.userid);
+
   return (
     <div className="profile">
       <div className="images">
@@ -85,8 +153,17 @@ const Profile = () => {
         <div className="uInfo">
           <div className="center">
             <span>{userInfo.username}</span>
-            <div className="buttons">
-              <button onClick={() => (followStatus.followed ? handleUnfollow(followStatus.followid) : handleFollow(userInfo.userid))}>{followStatus.followed ? "Unfollow" : "Follow"}</button>
+            <span className="email">{userInfo.email}</span>
+            {userInfo.userid && userInfo.userid !== currentUser.userid && (
+              <div className="buttons">
+                <button className={followStatus.followed ? "unfollowButton" : "followButton"} onClick={() => (followStatus.followed ? handleUnfollow(followStatus.followid) : handleFollow(userInfo.userid))}>
+                  {followStatus.followed ? "Unfollow" : "Follow"}
+                </button>
+              </div>
+            )}
+            <div className="followingsFollowers">
+              <span onClick={toggleFollowingsPopup}>Followings: {following.length}</span>
+              <span onClick={toggleFollowersPopup}>Followers: {followers.length}</span>
             </div>
           </div>
           <div className="bottom">
@@ -96,6 +173,8 @@ const Profile = () => {
           </div>
         </div>
         <Posts />
+        {showFollowingsPopup && renderPopupFollowings(following)}
+        {showFollowersPopup && renderPopupFollowers(followers)}
       </div>
     </div>
   );
