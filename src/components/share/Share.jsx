@@ -43,8 +43,7 @@ const Share = () => {
     <div className="share">
       <div className="container">
         <div className="top">
-          <img src={currentUser.profilepicture} alt="" />
-          <input type="text" placeholder={`What's on your mind for the next 24 hours ${currentUser.username}?`} name="content" onChange={handleChange} />
+          <input autoComplete="off" type="text" placeholder={`Write something you want to write?`} name="content" onChange={handleChange} />
           {err && <p className="error">{err.message || err}</p>}
         </div>
         <hr />

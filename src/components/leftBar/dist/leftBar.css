@@ -32,20 +32,6 @@
 .leftBar .container .menu span {
   font-size: 12px;
 }
-.leftBar .container .menu .user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.leftBar .container .menu .user img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.leftBar .container .menu .user span {
-  font-size: 14px;
-}
 .leftBar .container .menu .item {
   display: flex;
   align-items: center;

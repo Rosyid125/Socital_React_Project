@@ -73,7 +73,7 @@
 .post .container .user .menu button:last-child {
   background-color: #f0544f;
 }
-.edit-popup {
+.post .container .edit-popup {
   position: fixed;
   top: 0;
   left: 0;
@@ -86,7 +86,7 @@
   z-index: 9999; /* Ensure the popup appears on top of other content */
 }
 
-.edit-popup-inner {
+.post .container .edit-popup-inner {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -95,12 +95,12 @@
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
 }
 
-.edit-popup-inner h2 {
+.post .container .edit-popup-inner h2 {
   margin-bottom: 20px;
   font-size: 20px;
 }
 
-.edit-popup-inner input[type="text"] {
+.post .container .edit-popup-inner input[type="text"] {
   width: 100%;
   padding: 10px;
   margin-bottom: 20px;
@@ -110,30 +110,30 @@
 }
 
 /* CSS for file input */
-.file-input {
+.post .container .file-input {
   display: none; /* Hide the file input */
 }
 
-.file-label {
+.post .container .file-label {
   cursor: pointer; /* Change cursor to pointer on hover */
 }
 
-.file-container {
+.post .container .file-container {
   display: flex;
   align-items: center;
   gap: 10px; /* Adjust the gap between image and text */
   margin-bottom: 20px;
 }
 
-.file-container img {
+.post .container .file-container img {
   width: 20px; /* Adjust image size */
 }
 
-.file-container span {
+.post .container .file-container span {
   font-size: 10px;
 }
 
-.edit-popup-inner button {
+.post .container .edit-popup-inner button {
   padding: 10px 20px;
   background-color: #0095ff;
   border: none;
@@ -144,15 +144,7 @@
   margin-right: 10px;
 }
 
-.edit-popup-inner button:hover {
-  background-color: #007acc;
-}
-
-.edit-popup-inner button:last-child {
+.post .container .edit-popup-inner button:last-child {
   background-color: #f0544f;
   margin-right: none;
-}
-
-.edit-popup-inner button:last-child:hover {
-  background-color: #d4443f;
 }

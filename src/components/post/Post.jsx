@@ -53,15 +53,14 @@ const Post = ({ post }) => {
   }, []);
 
   const handleEdit = async (postid) => {
-    // e.preventDefault();
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      const response = api.patch(`/posts/${postid}/edit`, inputs, { headers });
+      const response = await api.patch(`/posts/${postid}/edit`, inputs, { headers });
 
       if (response.status === 200) {
-        // window.location.reload();
+        window.location.reload();
       } else {
         setErr(response.message);
       }
@@ -172,7 +171,7 @@ const Post = ({ post }) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
-            <img src={user.profilepicture} alt="" />
+            <img src={user.profilepicture} alt={user.username} />
             <div className="details">
               <Link to={`/profile/${user.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
                 <span className="name">{user.username}</span>

@@ -6,6 +6,7 @@ import LeftBar from "./components/leftBar/LeftBar";
 import RightBar from "./components/rightBar/RightBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
+import EditProfile from "./pages/editProfile/EditProfile";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/authContext";
 import "./dist/app.css";
@@ -77,6 +78,10 @@ function App() {
         {
           path: "/profile/:userid",
           element: <Profile />,
+        },
+        {
+          path: "/profile/edit",
+          element: <EditProfile />,
         },
       ],
     },

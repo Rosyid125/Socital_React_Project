@@ -15,12 +15,6 @@
   align-items: center;
   gap: 20px;
 }
-.share .container .top img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 .share .container .top input {
   border: none;
   outline: none;

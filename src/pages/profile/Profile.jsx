@@ -114,7 +114,7 @@ const Profile = () => {
         <ul>
           {data.map((user) => (
             <div className="follow" key={user.followid}>
-              <img src={user.followed.profilepicture} alt="" />
+              <img src={user.followed.profilepicture} alt={user.followed.username} />
               <div className="info">
                 <span>{user.followed.username}</span>
               </div>
@@ -135,7 +135,7 @@ const Profile = () => {
         <ul>
           {data.map((user) => (
             <div className="follow" key={user.followid}>
-              <img src={user.following.profilepicture} alt="" />
+              <img src={user.following.profilepicture} alt={user.following.username} />
               <div className="info">
                 <span>{user.following.username}</span>
               </div>
