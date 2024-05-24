@@ -76,3 +76,75 @@
 .navbar .right .notificationIcon {
   cursor: pointer;
 }
+/* Styling for search results popup */
+.search-results {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px); /* Sesuaikan dengan panjang input pencarian */
+  max-width: 500px; /* Maksimum lebar popup */
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Menambahkan overflow-y */
+  max-height: 200px; /* Batasan tinggi popup */
+}
+
+.search-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+
+.search-result img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  margin-left: auto; /* Untuk menempatkan di sebelah kanan */
+  font-size: 14px;
+  text-align: right; /* Untuk ratakan ke kanan */
+}
+
+.user-info span {
+  display: block;
+  color: #555;
+}
+
+.user-info .followers {
+  color: #007bff;
+}
+
+.user-info .following {
+  color: #28a745;
+}
+
+/* Hide scrollbar */
+.search-results::-webkit-scrollbar {
+  width: 0; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.search-results {
+  scrollbar-width: thin; /* Untuk Firefox */
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}

@@ -7,6 +7,7 @@ import RightBar from "./components/rightBar/RightBar";
 import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import EditProfile from "./pages/editProfile/EditProfile";
+import SearchUserResult from "./pages/searchUserResult/SearchUserResult";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/authContext";
 import "./dist/app.css";
@@ -82,6 +83,10 @@ function App() {
         {
           path: "/profile/edit",
           element: <EditProfile />,
+        },
+        {
+          path: "/search",
+          element: <SearchUserResult />,
         },
       ],
     },
