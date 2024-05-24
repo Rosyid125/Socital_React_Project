@@ -27,6 +27,12 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.username === "" && formData.email === "" && formData.newpassword === "" && formData.prevpassword === "" && formData.bio === "") {
+      setErr("Fill at least 1 field or both fields on password if you want to change password");
+      return;
+    }
+
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,

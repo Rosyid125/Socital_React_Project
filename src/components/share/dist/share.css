@@ -60,7 +60,8 @@
   background-color: #ffbb00;
   border-radius: 3px;
 }
-.share .container .top .error {
+.share .container .error {
   color: red;
   font-size: 12px;
+  padding-bottom: 10px;
 }

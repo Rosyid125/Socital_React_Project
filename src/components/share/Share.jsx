@@ -44,9 +44,9 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <input autoComplete="off" type="text" placeholder={`Write something you want to write?`} name="content" onChange={handleChange} />
-          {err && <p className="error">{err.message || err}</p>}
         </div>
         <hr />
+        {err && <p className="error">{err.message || err}</p>}
         <div className="bottom">
           <div className="left">
             <input type="file" id="file" style={{ display: "none" }} />
