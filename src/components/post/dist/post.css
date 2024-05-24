@@ -133,6 +133,11 @@
   font-size: 10px;
 }
 
+.post .container .edit-popup-inner img {
+  max-width: 100%; /* Membuat gambar tetap berada dalam card tanpa melebihi lebar maksimum card */
+  height: auto; /* Memastikan proporsi aspek gambar tetap terjaga */
+}
+
 .post .container .edit-popup-inner button {
   padding: 10px 20px;
   background-color: #0095ff;

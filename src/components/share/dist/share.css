@@ -60,6 +60,12 @@
   background-color: #ffbb00;
   border-radius: 3px;
 }
+.share .container img {
+  max-width: 100%;
+  max-height: 500px; /* Adjust this value as needed */
+  display: block;
+  margin: 0 auto;
+}
 .share .container .error {
   color: red;
   font-size: 12px;

@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
-import "./dist/editProfile.css"; // Import file CSS untuk styling
+import "./dist/editProfile.css";
 import api from "../../pages/services/api";
 import { AuthContext } from "../../context/authContext";
 import { Link } from "react-router-dom";
-import UserProfilePicture from "../../assets/16.jpg";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const EditProfile = () => {
   const { currentUser } = useContext(AuthContext);
   const [err, setErr] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null); // State to hold profile picture
 
   const [formData, setFormData] = useState({
     username: "",
@@ -15,6 +16,7 @@ const EditProfile = () => {
     bio: "",
     prevpassword: "",
     newpassword: "",
+    profilepicture: null,
   });
 
   const handleChange = (e) => {
@@ -25,10 +27,20 @@ const EditProfile = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      profilepicture: e.target.files[0],
+    }));
+
+    // Display the selected image
+    setProfilePicture(URL.createObjectURL(e.target.files[0]));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.username === "" && formData.email === "" && formData.newpassword === "" && formData.prevpassword === "" && formData.bio === "") {
+    if (formData.username === "" && formData.email === "" && formData.newpassword === "" && formData.prevpassword === "" && formData.bio === "" && formData.profilepicture === null) {
       setErr("Fill at least 1 field or both fields on password if you want to change password");
       return;
     }
@@ -36,15 +48,21 @@ const EditProfile = () => {
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
+        // "Content-Type": "multipart/form-data",
       };
-      const response = await api.patch(`/users/edit`, formData, { headers });
+      const formDataToSend = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataToSend.append(key, formData[key]);
+      });
+      const response = await api.post(`/users/edit`, formDataToSend, { headers });
       if (response.status === 200) {
+        // Handle success
         window.location.reload();
       } else {
-        setErr(response.message);
+        setErr(response.data.message); // Assuming error message is provided in response
       }
     } catch (err) {
-      setErr(err.response.data);
+      setErr(err.response.data.message); // Assuming error message is provided in response
     }
   };
 
@@ -53,10 +71,11 @@ const EditProfile = () => {
       <div className="edit-profile-container">
         <h2>Edit Profile and Password</h2>
         <form onSubmit={handleSubmit}>
-          <input type="file" id="file" className="file-input" />
+          {profilePicture && <img src={profilePicture} alt="Profile" />} {/* Display the profile picture if available */}
+          <input type="file" id="file" className="file-input" name="profilepicture" onChange={handleFileChange} />
           <label htmlFor="file" className="file-label">
+            <AccountCircleIcon />
             <div className="item file-container">
-              <img src={UserProfilePicture} alt="" />
               <span>Edit Your Profile Picture</span>
             </div>
           </label>
@@ -66,7 +85,7 @@ const EditProfile = () => {
           <p>Change Password</p>
           <input autoComplete="off" type="password" placeholder="Previous Password" onChange={handleChange} name="prevpassword" value={formData.prevpassword} />
           <input autoComplete="off" type="password" placeholder="New Password" onChange={handleChange} name="newpassword" value={formData.newpassword} />
-          {err && <p>{err.message || err || err.message.email[0]}</p>}
+          {err && <p>{err}</p>} {/* Display error message */}
           <button type="submit">Save Changes</button>
         </form>
       </div>

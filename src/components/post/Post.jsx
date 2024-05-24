@@ -24,13 +24,25 @@ const Post = ({ post }) => {
 
   const { user, datetime, content, postpicture, likes, comments, postid } = post;
 
-  const [inputs, setInputs] = useState({
+  const [editedPostPicture, setEditedPostPicture] = useState(null);
+
+  const [editInputs, setEditInputs] = useState({
     content: "",
-    postpicture: "",
+    postpicture: null,
   });
 
   const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setEditInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleEditFileChange = (e) => {
+    setEditInputs((prevState) => ({
+      ...prevState,
+      postpicture: e.target.files[0],
+    }));
+
+    // Display the selected image
+    setEditedPostPicture(URL.createObjectURL(e.target.files[0]));
   };
 
   useEffect(() => {
@@ -53,11 +65,21 @@ const Post = ({ post }) => {
   }, []);
 
   const handleEdit = async (postid) => {
+    if (editInputs.content === "" && editInputs.postpicture === null) {
+      setErr("You tried to post nothing, that's a no no!");
+      return;
+    }
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
-      const response = await api.patch(`/posts/${postid}/edit`, inputs, { headers });
+
+      const inputsToSend = new FormData();
+      Object.keys(editInputs).forEach((key) => {
+        inputsToSend.append(key, editInputs[key]);
+      });
+
+      const response = await api.post(`/posts/${postid}/edit`, inputsToSend, { headers });
 
       if (response.status === 200) {
         window.location.reload();
@@ -149,8 +171,9 @@ const Post = ({ post }) => {
       <div className="edit-popup-inner">
         <h2>Edit Post</h2>
         <input type="text" placeholder="Edit text content" onChange={handleChange} name="content" />
-        <input type="file" id="file" className="file-input" />
-        <label htmlFor="file" className="file-label">
+        {editedPostPicture && <img src={editedPostPicture} alt="EditedPostPic" />}
+        <input type="file" id="editfile" className="file-input" name="postpicture" onChange={handleEditFileChange} />
+        <label htmlFor="editfile" className="file-label">
           <div className="item file-container">
             <img src={Image} alt="" />
             <span>Edit Picture</span>
