@@ -9,6 +9,7 @@ const RightBar = () => {
   const [followers, setFollowers] = useState([]);
   const [err, setErr] = useState(null);
   const [followStatus, setFollowStatus] = useState({});
+  const [fetchNewData, setFetchNewData] = useState(); //cara curang
 
   const { currentUser } = useContext(AuthContext);
 
@@ -33,6 +34,7 @@ const RightBar = () => {
         }
 
         setFollowStatus(followStatuses);
+        console.log(followStatus);
       } catch (error) {
         console.error("Error fetching Follows:", error);
         setErr(error.message);
@@ -49,7 +51,16 @@ const RightBar = () => {
       };
       const response = await api.post(`/follows/${userid}`, {}, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        // Update following state
+
+        setFollowing(response.data.following);
+
+        console.log(following);
+
+        // Update followStatus state
+        const updatedFollowStatus = { ...followStatus };
+        updatedFollowStatus[userid] = true;
+        setFollowStatus(updatedFollowStatus);
       } else {
         setErr(response.message);
       }
@@ -59,14 +70,21 @@ const RightBar = () => {
     }
   };
 
-  const handleUnfollow = async (followid) => {
+  const handleUnfollow = async (followid, userid) => {
     try {
       const headers = {
         Authorization: `Bearer ${currentUser.token}`,
       };
       const response = await api.delete(`/follows/${followid}`, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        // Update following state
+        const updatedFollowing = following.filter((item) => item.followid !== followid);
+        setFollowing(updatedFollowing);
+
+        // Update followStatus state
+        const updatedFollowStatus = { ...followStatus };
+        updatedFollowStatus[userid] = false;
+        setFollowStatus(updatedFollowStatus);
       } else {
         setErr(response.message);
       }
@@ -90,7 +108,7 @@ const RightBar = () => {
               <div className="followUnfollowButton">
                 <button
                   className={followStatus[following.followed.userid] ? "unfollowButton" : "followButton"}
-                  onClick={() => (followStatus[following.followed.userid] ? handleUnfollow(following.followid) : handleFollow(following.followed.userid))}
+                  onClick={() => (followStatus[following.followed.userid] ? handleUnfollow(following.followid, following.followed.userid) : handleFollow(following.followed.userid))}
                 >
                   {followStatus[following.followed.userid] ? "Unfollow" : "Follow"}
                 </button>
@@ -109,7 +127,7 @@ const RightBar = () => {
               <div className="followUnfollowButton">
                 <button
                   className={followStatus[follower.following.userid] ? "unfollowButton" : "followButton"}
-                  onClick={() => (followStatus[follower.following.userid] ? handleUnfollow(follower.followid) : handleFollow(follower.following.userid))}
+                  onClick={() => (followStatus[follower.following.userid] ? handleUnfollow(follower.followid, follower.following.userid) : handleFollow(follower.following.userid))}
                 >
                   {followStatus[follower.following.userid] ? "Unfollow" : "Follow"}
                 </button>

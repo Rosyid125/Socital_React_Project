@@ -37,7 +37,8 @@ const Profile = () => {
       try {
         const response = await api.get(`/follows/${userid}/following/${currentUser.userid}`);
 
-        setFollowStatus(response.data);
+        setFollowStatus(response.data.followed);
+        setFollowId(response.data.followid);
       } catch (error) {
         console.error("Error fetching Follows:", error);
         setErr(error.message);
@@ -70,7 +71,8 @@ const Profile = () => {
       };
       const response = await api.post(`/follows/${userid}`, {}, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        setFollowId(response.data.following[0].followid);
+        setFollowStatus(true);
       } else {
         setErr(response.message);
       }
@@ -87,7 +89,7 @@ const Profile = () => {
       };
       const response = await api.delete(`/follows/${followid}`, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        setFollowStatus(false);
       } else {
         setErr(response.message);
       }
@@ -147,9 +149,6 @@ const Profile = () => {
     </div>
   );
 
-  console.log(currentUser.userid);
-  console.log(userInfo.userid);
-
   return (
     <div className="profile">
       <div className="images">
@@ -162,8 +161,8 @@ const Profile = () => {
             <span className="email">{userInfo.email}</span>
             {userInfo.userid && userInfo.userid !== currentUser.userid && (
               <div className="buttons">
-                <button className={followStatus.followed ? "unfollowButton" : "followButton"} onClick={() => (followStatus.followed ? handleUnfollow(followStatus.followid) : handleFollow(userInfo.userid))}>
-                  {followStatus.followed ? "Unfollow" : "Follow"}
+                <button className={followStatus ? "unfollowButton" : "followButton"} onClick={() => (followStatus ? handleUnfollow(followId) : handleFollow(userInfo.userid))}>
+                  {followStatus ? "Unfollow" : "Follow"}
                 </button>
               </div>
             )}
