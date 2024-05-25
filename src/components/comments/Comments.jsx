@@ -3,10 +3,10 @@ import "./dist/comments.css";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
 
-const Comments = ({ post }) => {
+const Comments = ({ post, onCommentAmountChange }) => {
   const { currentUser } = useContext(AuthContext);
 
-  const [comments, setComments] = useState([]);
+  const [postComments, setPostComments] = useState([]);
 
   const [inputs, setInputs] = useState({
     comment: "",
@@ -14,13 +14,15 @@ const Comments = ({ post }) => {
 
   const [err, setErr] = useState(null);
 
-  const { postid } = post;
+  const { postid, comments } = post;
+
+  const [commentAmount, setCommentAmount] = useState(comments);
 
   useEffect(() => {
     const fetchPosts = async (postid) => {
       try {
         const response = await api.get(`/posts/${postid}/comments`);
-        setComments(response.data.comments);
+        setPostComments(response.data.comments);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -41,7 +43,10 @@ const Comments = ({ post }) => {
 
       const response = await api.post(`/posts/${postid}/comments/add`, inputs, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        setPostComments(response.data.comments);
+        // Perbarui commentAmount dengan menambahkan 1
+        setCommentAmount((prevAmount) => prevAmount + 1);
+        onCommentAmountChange(commentAmount + 1);
       } else {
         setErr(response.message);
       }
@@ -57,7 +62,9 @@ const Comments = ({ post }) => {
       };
       const response = await api.delete(`/posts/${postid}/comments/${commentid}`, { headers });
       if (response.status === 200) {
-        window.location.reload();
+        setPostComments(postComments.filter((comment) => comment.commentid !== commentid));
+        setCommentAmount((prevAmount) => prevAmount - 1);
+        onCommentAmountChange(commentAmount - 1);
       } else {
         setErr(response.message);
       }
@@ -73,7 +80,7 @@ const Comments = ({ post }) => {
         <input type="text" placeholder="write a comment" onChange={handleChange} name="comment" />
         <button onClick={() => handleComment(postid)}>Send</button>
       </div>
-      {comments.map((comment) => (
+      {postComments.map((comment) => (
         <div className="comment" key={comment.commentid}>
           <img src={comment.user.profilePicture} alt="" />
           <div className="info">

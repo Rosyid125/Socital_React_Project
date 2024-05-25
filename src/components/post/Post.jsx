@@ -24,6 +24,14 @@ const Post = ({ post }) => {
 
   const { user, datetime, content, postpicture, likes, comments, postid } = post;
 
+  const [likeAmount, setLikeAmount] = useState(likes);
+
+  const [commentAmount, setCommentAmount] = useState(comments);
+
+  const handleCommentAmountChange = (newCommentAmount) => {
+    setCommentAmount(newCommentAmount);
+  };
+
   const [editedPostPicture, setEditedPostPicture] = useState(null);
 
   const [editInputs, setEditInputs] = useState({
@@ -116,8 +124,9 @@ const Post = ({ post }) => {
 
       const response = await api.post(`/posts/${postid}/likes/like`, {}, { headers });
       if (response.status === 200) {
+        setLikeId(response.data.likeid);
         setLiked(true);
-        window.location.reload();
+        setLikeAmount(likeAmount + 1);
       } else {
         setErr(response.message);
       }
@@ -135,7 +144,7 @@ const Post = ({ post }) => {
       const response = await api.delete(`/posts/${postid}/likes/${likeid}`, { headers });
       if (response.status === 200) {
         setLiked(false);
-        window.location.reload();
+        setLikeAmount(likeAmount - 1);
       } else {
         setErr(response.message);
       }
@@ -218,15 +227,15 @@ const Post = ({ post }) => {
             {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
           </div>
           <div className="item" onClick={handleLikeClick}>
-            {likes} Likes
+            {likeAmount} Likes
           </div>
           <div className="item" onClick={handleCommentClick}>
             <TextsmsOutlinedIcon />
-            {comments} Comments
+            {commentAmount} Comments
           </div>
         </div>
         {likeOpen && <Likes post={post} />}
-        {commentOpen && <Comments post={post} />}
+        {commentOpen && <Comments post={post} onCommentAmountChange={handleCommentAmountChange} />}
         {editOpen && renderPopupEdit(postid)}
       </div>
     </div>
