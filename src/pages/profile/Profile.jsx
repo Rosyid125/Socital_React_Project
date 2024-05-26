@@ -19,6 +19,9 @@ const Profile = () => {
   const [showFollowingsPopup, setShowFollowingsPopup] = useState(false);
   const [showFollowersPopup, setShowFollowersPopup] = useState(false);
 
+  const [followingLength, setFollowingLength] = useState(0);
+  const [followersLength, setFollowersLength] = useState(0);
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -55,6 +58,8 @@ const Profile = () => {
         const responseFollowers = await api.get(`/follows/${userid}/followers`);
         setFollowing(responseFollowings.data.following);
         setFollowers(responseFollowers.data.followers);
+        setFollowingLength(responseFollowings.data.following.length);
+        setFollowersLength(responseFollowers.data.followers.length);
       } catch (error) {
         console.error("Error fetching Follows:", error);
         setErr(error.message);
@@ -73,6 +78,7 @@ const Profile = () => {
       if (response.status === 200) {
         setFollowId(response.data.following[0].followid);
         setFollowStatus(true);
+        setFollowersLength(followersLength + 1);
       } else {
         setErr(response.message);
       }
@@ -90,6 +96,7 @@ const Profile = () => {
       const response = await api.delete(`/follows/${followid}`, { headers });
       if (response.status === 200) {
         setFollowStatus(false);
+        setFollowersLength(followersLength - 1);
       } else {
         setErr(response.message);
       }
@@ -167,8 +174,8 @@ const Profile = () => {
               </div>
             )}
             <div className="followingsFollowers">
-              <span onClick={toggleFollowingsPopup}>Followings: {following.length}</span>
-              <span onClick={toggleFollowersPopup}>Followers: {followers.length}</span>
+              <span onClick={toggleFollowingsPopup}>Followings: {followingLength}</span>
+              <span onClick={toggleFollowersPopup}>Followers: {followersLength}</span>
             </div>
           </div>
           <div className="bottom">
