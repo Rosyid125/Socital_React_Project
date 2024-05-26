@@ -125,7 +125,9 @@ const Profile = () => {
             <div className="follow" key={user.followid}>
               <img src={user.followed.profilepicture} alt={user.followed.username} />
               <div className="info">
-                <span>{user.followed.username}</span>
+                <Link to={`/profile/${user.followed.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <span onClick={() => setShowFollowingsPopup(false)}>{user.followed.username}</span>
+                </Link>
               </div>
             </div>
           ))}
@@ -146,7 +148,9 @@ const Profile = () => {
             <div className="follow" key={user.followid}>
               <img src={user.following.profilepicture} alt={user.following.username} />
               <div className="info">
-                <span>{user.following.username}</span>
+                <Link to={`/profile/${user.following.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <span onClick={() => setShowFollowersPopup(false)}>{user.following.username}</span>
+                </Link>
               </div>
             </div>
           ))}

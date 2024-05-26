@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import api from "../../pages/services/api";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const RightBar = () => {
   const [following, setFollowing] = useState([]);
@@ -103,7 +104,9 @@ const RightBar = () => {
             <div className="user" key={following.followed.userid}>
               <div className="userInfo">
                 <img src={following.followed.profilepicture} alt={following.followed.username} />
-                <span>{following.followed.username}</span>
+                <Link to={`/profile/${following.followed.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <span>{following.followed.username}</span>
+                </Link>
               </div>
               <div className="followUnfollowButton">
                 <button
@@ -122,7 +125,9 @@ const RightBar = () => {
             <div className="user" key={follower.following.userid}>
               <div className="userInfo">
                 <img src={follower.following.profilepicture} alt={follower.following.username} />
-                <span>{follower.following.username}</span>
+                <Link to={`/profile/${follower.following.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                  <span>{follower.following.username}</span>
+                </Link>
               </div>
               <div className="followUnfollowButton">
                 <button

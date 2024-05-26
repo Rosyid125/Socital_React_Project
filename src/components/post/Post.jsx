@@ -74,7 +74,7 @@ const Post = ({ post }) => {
 
   const handleEdit = async (postid) => {
     if (editInputs.content === "" && editInputs.postpicture === null) {
-      setErr("You tried to post nothing, that's a no no!");
+      setErr("You tried to edit the post to nothing, that's also a no no!");
       return;
     }
     try {
@@ -181,6 +181,7 @@ const Post = ({ post }) => {
         <h2>Edit Post</h2>
         <input type="text" placeholder="Edit text content" onChange={handleChange} name="content" />
         {editedPostPicture && <img src={editedPostPicture} alt="EditedPostPic" />}
+        {err && <p className="error">{err.message || err}</p>}
         <input type="file" id="editfile" className="file-input" name="postpicture" onChange={handleEditFileChange} />
         <label htmlFor="editfile" className="file-label">
           <div className="item file-container">

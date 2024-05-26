@@ -42,6 +42,9 @@ const Navbar = () => {
     if (event.key === "Enter") {
       try {
         const response = await api.get(`/users/search/${searchInput}`);
+        if (response.data.users.length === 0) {
+          return;
+        }
         setSearchResults(response.data.users);
       } catch (error) {
         console.error("Error searching users:", error);
@@ -67,25 +70,29 @@ const Navbar = () => {
         </div>
         <div className="user">
           <img src={userInfo.profilepicture} alt={userInfo.username} />
-          <span>{userInfo.username}</span>
+          <Link to={`/profile/${userInfo.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <span>{userInfo.username}</span>
+          </Link>
         </div>
       </div>
       {/* Popup to display search results */}
       {searchResults.length > 0 && (
         <div className="search-results">
-          <button className="close-button" onClick={() => setSearchResults([])}>
-            Close
-          </button>
           {searchResults.map((user) => (
             <div key={user.userid} className="search-result">
               <img src={user.profilepicture} alt={user.username} />
-              <span>{user.username}</span>
+              <Link to={`/profile/${user.userid}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <span onClick={() => setSearchResults([])}>{user.username}</span>
+              </Link>
               <div className="user-info">
                 <span className="followers">Followers: {user.followers}</span>
                 <span className="following">Following: {user.followings}</span>
               </div>
             </div>
           ))}
+          <button className="close-button" onClick={() => setSearchResults([])}>
+            Close
+          </button>
         </div>
       )}
     </div>

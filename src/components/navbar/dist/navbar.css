@@ -138,10 +138,10 @@
 
 /* Close button */
 .close-button {
-  position: absolute;
+  align-items: center;
   top: 5px;
   right: 5px;
-  background-color: #ff0000;
+  background-color: #f0544f;
   color: white;
   border: none;
   padding: 5px 10px;
